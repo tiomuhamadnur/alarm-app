@@ -1,11 +1,11 @@
 // app.js
 const express = require('express');
 const app = express();
-const port = 3000;
 const mysql = require('mysql');
 const cron = require('node-cron');
 const axios = require('axios');
 require('dotenv').config();
+const port = process.env.PORT;
 
 const db = mysql.createConnection({
     host: process.env.DB_HOST,
@@ -41,7 +41,7 @@ cron.schedule('* * * * *', () => {
     console.log(response);
 
     // Temukan alarm yang sesuai dengan waktu dan hari saat ini
-    const sql = 'SELECT * FROM alarms WHERE time = ? AND FIND_IN_SET(?, day) > 0';
+    const sql = `SELECT * FROM alarms WHERE time = ? AND FIND_IN_SET(?, day) > 0`;
     db.query(sql, [currentTime, currentDay], (err, results) => {
     if (err) {
         console.error('Gagal mendapatkan alarm: ', err);
